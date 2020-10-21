@@ -40,7 +40,7 @@ def postJsonHandler():
         text = "Вот вам карусель!"
         card = {
             "type": 'ItemsList',
-            "image_id": image_array
+            "items": image_array
         }
     elif "кнопки" in command:
         text = "Вот вам кнопки: кто же GOAT в теннисе?"
