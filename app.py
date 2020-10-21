@@ -23,7 +23,7 @@ def postJsonHandler():
     card = {}
     buttons = []
     text = ''
-    image_array = [1,2]
+    image_array = [457239017,457239018,457239019]
     if request.json["session"]["new"]:
         text = 'Привет, я домашнее задание для MADE и пока ничего не умею'
     elif request.json["request"]["command"] == 'on_interrupt':
