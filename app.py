@@ -57,7 +57,7 @@ def postJsonHandler():
         "response": {
             "end_session": False,
             "text": text,
-            "debug": df_response
+            "debug": df_response.query_result
         }
     }
     logging.info(f"response: {response}")
@@ -65,39 +65,6 @@ def postJsonHandler():
     return json.dumps(response, ensure_ascii=False, indent=2)
 
 
-
-@app.route('/forecasts', methods=['POST'], endpoint='forecasts')
-def forecasts_route():
-    logging.info(request.is_json)
-    content = request.get_json()
-    response = get_forecasts_controller(content)
-    logging.info(f"response: {response}")
-    return jsonify(response)
-
-
-def get_forecasts_controller(content):
-    command = content['request']
-
-    if command == 'get_forecasts':
-        ticker = content['body']['ticker']
-        data = get_forecasts_model(ticker)
-        
-        if len(data) == 0:
-            response = {
-                "state": "error",
-                "message": "data not found",
-            }
-        else:        
-            response = {
-            "state": "OK",
-            "response": data 
-        }
-    else:
-        response = {
-            "state": "error",
-            "message": "unknown command",
-        }
-    return response 
 
 
 forecasts_query_template = "select predictor, t1.DATE, t4.CLOSE, prediction_on, prediction, t41.close as actual_price,\
