@@ -40,15 +40,11 @@ def postJsonHandler():
     content = request.get_json()
     command = content['request']['command'].lower().split()
     logging.info(f'\ncommand: {command}')
-    card = {}
-    buttons = []
     text = ''
     if request.json["session"]["new"]:
         text = 'Привет, я домашнее задание для MADE и пока ничего не умею'
     elif request.json["request"]["command"] == 'on_interrupt':
         text = 'Прощайте. Да прибудет с вами ... ох уж эти старые привычки'
-    elif "привет" in command:
-        text = "Привет!"
     elif request.json['request']['command'] == 'debug':
         text = json.dumps(request.json)
     else: 
