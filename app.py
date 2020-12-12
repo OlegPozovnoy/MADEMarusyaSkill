@@ -37,7 +37,6 @@ def index():
 @app.route('/marusya', methods=['POST'])
 def postJsonHandler():
     logging.info(request.is_json)
-    logging.info(f'\ncommand: {command}')
     text = ''
     if request.json["session"]["new"]:
         text = 'Привет, я домашнее задание для MADE и пока ничего не умею'
