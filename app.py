@@ -18,7 +18,7 @@ sessionStorage = {}
 
 googleProjectID =  os.environ['GOOGLE_PROJECT_ID']
 dialogFlowSessionID = os.environ['DIALOG_FLOW_SESSION_ID']
-
+dialogFlowSessionLanguage =  os.environ['DIALOG_FLOW_LANGUAGE_CODE']
 
 session_client = dialogflow_v2.SessionsClient()
 session_path = session_client.session_path(googleProjectID, dialogFlowSessionID)
@@ -48,7 +48,7 @@ def postJsonHandler():
     elif request.json['request']['command'] == 'debug':
         text = json.dumps(request.json)
     else: 
-        text_input = dialogflow_v2.types.TextInput(text=request.json['request']['command'], language_code=keys.values['dialogFlowSessionLanguage'])
+        text_input = dialogflow_v2.types.TextInput(text=request.json['request']['command'], language_code=dialogFlowSessionLanguage)
         query_input = dialogflow_v2.types.QueryInput(text = text_input)
         df_response = session_client.detect_intent(session_path, query_input)
         text =df_response.query_result.fulfillment_text
