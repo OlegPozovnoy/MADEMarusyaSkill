@@ -37,8 +37,6 @@ def index():
 @app.route('/marusya', methods=['POST'])
 def postJsonHandler():
     logging.info(request.is_json)
-    content = request.get_json()
-    command = content['request']['command'].lower().split()
     logging.info(f'\ncommand: {command}')
     text = ''
     if request.json["session"]["new"]:
@@ -60,6 +58,7 @@ def postJsonHandler():
         "response": {
             "end_session": False,
             "text": text,
+            "debug": df_response
         }
     }
     logging.info(f"response: {response}")
