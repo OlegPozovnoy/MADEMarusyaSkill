@@ -4,6 +4,7 @@ import json
 import logging
 import random
 import requests
+import googletrans
 
 from flask import Flask
 from flask import request
