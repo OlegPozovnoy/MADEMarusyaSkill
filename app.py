@@ -3,8 +3,7 @@ from __future__ import unicode_literals
 import json
 import logging
 import random
-import googletrans
-from googletrans import Translator
+from google_trans_new import google_translator  
 
 from flask import Flask
 from flask import request
@@ -63,9 +62,9 @@ def postJsonHandler():
             text += str(result)
         elif df_response.query_result.intent.display_name == "get_translation - fallback":
             print("translatign", df_response.query_result.query_text)   
-            translator = Translator()
-            result = translator.translate(df_response.query_result.query_text)
-            text = str(result)
+            translator = google_translator()  
+            translate_text = translator.translate(df_response.query_result.query_text,lang_tgt='en')  
+            text += str(translate_text)
 
         
         
