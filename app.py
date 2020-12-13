@@ -112,6 +112,7 @@ def insert_task(uid, task_text):
         password=password,
         host=host, 
         dbname=db)
+    conn.autocommit = True
 
     print("insert_task", uid, task_text)
     query = query_insert.replace('%uid%', uid)
@@ -119,7 +120,7 @@ def insert_task(uid, task_text):
     print("query", query)
     cursor = conn.cursor()
     cursor.execute(query)
-    sleep(0.05)
+    #sleep(0.05)
     return 
 
 def get_task(uid):
@@ -128,6 +129,7 @@ def get_task(uid):
         password=password,
         host=host, 
         dbname=db)
+    conn.autocommit = True
 
     query = query_select.replace('%uid%', uid)
     print("query")
