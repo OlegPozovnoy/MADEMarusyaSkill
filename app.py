@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 import json
 import logging
 import random
-import requests
 import googletrans
 
 from flask import Flask
@@ -53,7 +52,12 @@ def postJsonHandler():
         query_input = dialogflow_v2.types.QueryInput(text = text_input)
         df_response = session_client.detect_intent(session_path, query_input)
         text =df_response.query_result.fulfillment_text
-        print(df_response)
+        if df_response.query_result.intent.display_name == "get_weather":
+            print("get_weatheer")
+            result = make_weather_api_call(str(df_response.query_result.parameters.fields.value.string_value))
+            text += str(result)
+
+        
         
     response = {
         "version": request.json['version'],
@@ -103,6 +107,7 @@ forecasts_query_template = "select predictor, t1.DATE, t4.CLOSE, prediction_on, 
 
 
 def make_weather_api_call(city):
+    print("api call", city)
     url = 'api.openweathermap.org/data/2.5/weather?q='+str(city)+',ru&APPID=' + str(weather_api)
     result = requests.get(url)
     return result
