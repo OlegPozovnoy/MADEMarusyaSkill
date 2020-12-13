@@ -12,6 +12,7 @@ import dialogflow_v2
 import os
 import psycopg2
 import requests
+from time import sleep
 
 app = Flask(__name__)
 
@@ -71,7 +72,7 @@ def postJsonHandler():
             if len(tasks) == 0:
                 text += str("Пока у вас ничего не запланировано")
             else:
-                text += "\n".join(tasks)    
+                text += tasks  
         elif df_response.query_result.intent.display_name == "create_task - fallback":
             print("create_task - fallback", uid, df_response.query_result.query_text)
             insert_task(uid, df_response.query_result.query_text)            
@@ -118,6 +119,7 @@ def insert_task(uid, task_text):
     print("query", query)
     cursor = conn.cursor()
     cursor.execute(query)
+    sleep(0.05)
     return 
 
 def get_task(uid):
