@@ -73,7 +73,7 @@ def postJsonHandler():
             else:
                 text += "\n".join(tasks)    
         elif df_response.query_result.intent.display_name == "create_task - fallback":
-            ptint("create_task - fallback")
+            print("create_task - fallback")
             insert_task(uid, df_response.query_result.query_text)            
         
 
