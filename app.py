@@ -66,14 +66,14 @@ def postJsonHandler():
             translate_text = translator.translate(df_response.query_result.query_text,lang_tgt='en')  
             text += str(translate_text)
         elif df_response.query_result.intent.display_name == "get_my_tasks":
-            print("get_my_tasks")
+            print("get_my_tasks", uid)
             tasks = get_task(uid)
             if len(tasks) == 0:
                 text += str("Пока у вас ничего не запланировано")
             else:
                 text += "\n".join(tasks)    
         elif df_response.query_result.intent.display_name == "create_task - fallback":
-            print("create_task - fallback")
+            print("create_task - fallback", uid, df_response.query_result.query_text)
             insert_task(uid, df_response.query_result.query_text)            
         
 
