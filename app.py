@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 import json
 import logging
 import random
+import requests
 
 from flask import Flask
 from flask import request
@@ -29,6 +30,8 @@ password = os.environ['POSTGRES_PASSWORD']
 host = os.environ['POSTGRES_HOST']
 db = os.environ['POSTGRES_DATABASE']
 
+weather_api = os.environ['WEATHER_API']
+
 @app.route('/')
 def index():
     return '<h1>MADE Marusya Skill</h1>'
@@ -49,15 +52,14 @@ def postJsonHandler():
         query_input = dialogflow_v2.types.QueryInput(text = text_input)
         df_response = session_client.detect_intent(session_path, query_input)
         text =df_response.query_result.fulfillment_text
-
-
+        print(df_response)
+        
     response = {
         "version": request.json['version'],
         "session": request.json['session'],
         "response": {
             "end_session": False,
-            "text": text,
-            "debug": df_response.query_result
+            "text": text
         }
     }
     logging.info(f"response: {response}")
@@ -96,6 +98,14 @@ forecasts_query_template = "select predictor, t1.DATE, t4.CLOSE, prediction_on, 
     group by DATE) t11\
     on t11.CLOSE_TIME = t41.TIME and t11.DATE = t41.DATE\
     order by t1.DATE desc"
+
+
+
+def make_weather_api_call(city):
+    url = 'api.openweathermap.org/data/2.5/weather?q='+str(city)+',ru&APPID=' + str(weather_api)
+    result = requests.get(url)
+    return result
+
 
 
 def get_forecasts_model(ticker):
