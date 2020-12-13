@@ -109,7 +109,7 @@ forecasts_query_template = "select predictor, t1.DATE, t4.CLOSE, prediction_on, 
 
 def make_weather_api_call(city):
     print("api call", city)
-    url = 'api.openweathermap.org/data/2.5/weather?q='+str(city)+',ru&APPID=' + str(weather_api)
+    url = 'http://api.openweathermap.org/data/2.5/weather?q='+str(city)+',ru&APPID=' + str(weather_api)
     result = requests.get(url)
     return result
 
