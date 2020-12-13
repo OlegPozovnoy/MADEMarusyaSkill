@@ -112,7 +112,6 @@ def insert_task(uid, task_text):
         host=host, 
         dbname=db)
 
-    cursor = conn.cursor()
     print("insert_task", uid, task_text)
     query = query_insert.replace('%uid%', uid)
     query = query.replace('%task_name%', task_text)
@@ -127,8 +126,6 @@ def get_task(uid):
         password=password,
         host=host, 
         dbname=db)
-
-    cursor = conn.cursor()
 
     query = query_select.replace('%uid%', uid)
     print("query")
