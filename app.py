@@ -116,6 +116,7 @@ def insert_task(uid, task_text):
 
     query = query_insert.replace('%uid%', uid)
     query = query.replace('%task_name%', task_text)
+    print("query")
     cursor = conn.cursor()
     cursor.execute(query)
     return 
@@ -130,6 +131,7 @@ def get_task(uid):
     cursor = conn.cursor()
 
     query = query_select.replace('%uid%', uid)
+    print("query")
     cursor = conn.cursor()
     cursor.execute(query)
     result = cursor.fetchall()
