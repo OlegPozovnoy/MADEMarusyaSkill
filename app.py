@@ -43,10 +43,11 @@ def index():
 def postJsonHandler():
     logging.info(request.is_json)
     text = ''
+    uid = request.json["session"]['user_id']
     if request.json["session"]["new"]:
         text = 'Привет, я домашнее задание для MADE и пока ничего не умею'
     elif request.json["request"]["command"] == 'on_interrupt':
-        text = 'Прощайте. Да прибудет с вами ... ох уж эти старые привычки'
+        text = 'До свидания.'
     elif request.json['request']['command'] == 'debug':
         text = json.dumps(request.json)
     else: 
@@ -54,7 +55,7 @@ def postJsonHandler():
         query_input = dialogflow_v2.types.QueryInput(text = text_input)
         df_response = session_client.detect_intent(session_path, query_input)
         print("df_response",df_response)    
-        print("output_contexts", df_response.query_result.output_contexts)    
+        print("output_contexts", df_response.query_result.output_contexts[0])    
         text =df_response.query_result.fulfillment_text
         if df_response.query_result.intent.display_name == "get_weather" and df_response.query_result.all_required_params_present:
             print(df_response.query_result.parameters)
