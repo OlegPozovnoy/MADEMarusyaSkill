@@ -54,7 +54,7 @@ def postJsonHandler():
         text =df_response.query_result.fulfillment_text
         if df_response.query_result.intent.display_name == "get_weather" and df_response.query_result.all_required_params_present:
             print(df_response.query_result.parameters)
-            result = make_weather_api_call(str(df_response.query_result.parameters.fields.value.string_value))
+            result = make_weather_api_call(str(df_response.query_result.parameters.fields['geo-city'].string_value))
             text += str(result)
 
         
