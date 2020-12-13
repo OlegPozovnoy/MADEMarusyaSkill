@@ -45,7 +45,8 @@ def postJsonHandler():
     text = ''
     uid = request.json["session"]['user_id']
     if request.json["session"]["new"]:
-        text = 'Привет, я домашнее задание для MADE и пока ничего не умею'
+        text = 'Привет, я ваш ассистент. Я могу рассказать про погоду, добавлять задания в список дел,\
+             переводить предложения на английский. Также вы можете пообщаться с прошлой версией Пивбота.'
     elif request.json["request"]["command"] == 'on_interrupt':
         text = 'До свидания.'
     elif request.json['request']['command'] == 'debug':
