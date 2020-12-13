@@ -11,6 +11,7 @@ from flask import request
 import dialogflow_v2
 import os
 import psycopg2
+import requests
 
 app = Flask(__name__)
 
