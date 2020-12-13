@@ -61,10 +61,10 @@ def postJsonHandler():
             print(df_response.query_result.parameters)
             result = make_weather_api_call(str(df_response.query_result.parameters.fields['geo-city'].string_value))
             text += str(result)
-        #elif df_response.query_result.output_contexts[0].name == "projects/sch2-ovrc/agent/sessions/sch2-ovrc/contexts/get_translation-followup":
-        #    translator = Translator()
-        #    result = translator.translate(df_response.query_result.query_text)
-        #    text = str(result)
+        elif df_response.query_result.intent.display_name == "get_translation - fallback":
+            translator = Translator()
+            result = translator.translate(df_response.query_result.query_text)
+            text = str(result)
 
         
         
