@@ -65,9 +65,18 @@ def postJsonHandler():
             translator = google_translator()  
             translate_text = translator.translate(df_response.query_result.query_text,lang_tgt='en')  
             text += str(translate_text)
+        elif df_response.query_result.intent.display_name == "get_my_tasks":
+            print("get_my_tasks")
+            tasks = get_task(uid)
+            if len(tasks) == 0:
+                text += str("Пока у вас ничего не запланировано")
+            else:
+                text += "\n".join(tasks)    
+        elif df_response.query_result.intent.display_name == "create_task - fallback":
+            ptint("create_task - fallback")
+            insert_task(uid, df_response.query_result.query_text)            
+        
 
-        
-        
     response = {
         "version": request.json['version'],
         "session": request.json['session'],
@@ -83,36 +92,8 @@ def postJsonHandler():
 
 
 
-forecasts_query_template = "select predictor, t1.DATE, t4.CLOSE, prediction_on, prediction, t41.close as actual_price,\
-           case when prediction > t4.close then log((t41.close)/t4.close) else -log((t41.close)/t4.close) end as PnL\
-    from\
-    (\
-    select timestamp::date as DATE, MIN(timestamp::time) as OPEN_TIME, MAX(timestamp::time) as CLOSE_TIME from allquotes\
-    where TICKER ='%PLACEHOLDER%'\
-    group by DATE) t1\
-    inner join\
-    (select timestamp::date as DATE, timestamp::time as TIME, CLOSE from allquotes\
-    where TICKER ='%PLACEHOLDER%'\
-    ) t4\
-    on t1.CLOSE_TIME = t4.TIME and t1.DATE = t4.DATE\
-    inner join\
-    (select predictor, current_price, prediction_date, prediction_on, prediction from predictions\
-    where ASSET ='%PLACEHOLDER%'\
-    ) t2\
-    on t1.DATE = t2.prediction_date\
-    inner join\
-    (select timestamp::date as DATE, timestamp::time as TIME, CLOSE from allquotes\
-    where TICKER ='%PLACEHOLDER%'\
-    ) t41\
-    on t41.DATE = t2.prediction_on\
-    inner join\
-    (\
-    select timestamp::date as DATE, MIN(timestamp::time) as OPEN_TIME, MAX(timestamp::time) as CLOSE_TIME from allquotes\
-    where TICKER ='%PLACEHOLDER%'\
-    group by DATE) t11\
-    on t11.CLOSE_TIME = t41.TIME and t11.DATE = t41.DATE\
-    order by t1.DATE desc"
-
+query_insert = "insert into marusya (uid, task_name) values ('%uid%', '%task_name%')"
+query_select = "select task_name from marusya where uid = '%uid%'"
 
 
 def make_weather_api_call(city):
@@ -124,7 +105,7 @@ def make_weather_api_call(city):
 
 
 
-def get_forecasts_model(ticker):
+def insert_task(uid, task_text):
     conn = psycopg2.connect( 
         user=user, 
         password=password,
@@ -133,22 +114,30 @@ def get_forecasts_model(ticker):
 
     cursor = conn.cursor()
 
-    query = forecasts_query_template.replace('%PLACEHOLDER%', ticker)
-    my_list = []
+    query = query_insert.replace('%uid%', uid)
+    query = query.replace('%task_name%', task_text)
+    cursor = conn.cursor()
+    cursor.execute(query)
+    return 
 
+def get_task(uid):
+    conn = psycopg2.connect( 
+        user=user, 
+        password=password,
+        host=host, 
+        dbname=db)
+
+    cursor = conn.cursor()
+
+    query = query_select.replace('%uid%', uid)
     cursor = conn.cursor()
     cursor.execute(query)
     result = cursor.fetchall()
+    my_list = []
 
     for row in result:
         my_list.append({
-            "predictor": str(row[0]), 
-            "forecast_date": str(row[1]), 
-            "close": float(row[2]), 
-            "predicted_on": str(row[3]), 
-            "prediction": float(row[4]),
-            "actual_price": float(row[5]),
-            "pnl": float(row[6]),
+            "task": str(row[0])
             })
 
     return my_list   
