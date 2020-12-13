@@ -4,6 +4,7 @@ import json
 import logging
 import random
 import googletrans
+from googletrans import Translator
 
 from flask import Flask
 from flask import request
@@ -59,6 +60,10 @@ def postJsonHandler():
         if df_response.query_result.intent.display_name == "get_weather" and df_response.query_result.all_required_params_present:
             print(df_response.query_result.parameters)
             result = make_weather_api_call(str(df_response.query_result.parameters.fields['geo-city'].string_value))
+            text += str(result)
+        elif df_response.query_result.intent.display_name == "get_translation_phrase":
+            translator = Translator()
+            result = translator.translate(df_response.query_result.query_text)
             text += str(result)
 
         
