@@ -51,9 +51,7 @@ def postJsonHandler():
         text = json.dumps(request.json)
     else: 
         text_input = dialogflow_v2.types.TextInput(text=request.json['request']['command'], language_code=dialogFlowSessionLanguage)
-        print("text_input",text_input)
         query_input = dialogflow_v2.types.QueryInput(text = text_input)
-        print("query_input",query_input)
         df_response = session_client.detect_intent(session_path, query_input)
         print("df_response",df_response)        
         text =df_response.query_result.fulfillment_text
