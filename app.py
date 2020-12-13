@@ -114,8 +114,8 @@ def make_weather_api_call(city):
     print("api call", city)
     url = 'http://api.openweathermap.org/data/2.5/weather?q='+str(city)+',ru&APPID=' + str(weather_api)
     result = requests.get(url)
-    print(result)
-    return result
+    print(result.json())
+    return result.json()
 
 
 
