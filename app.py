@@ -53,13 +53,14 @@ def postJsonHandler():
         text_input = dialogflow_v2.types.TextInput(text=request.json['request']['command'], language_code=dialogFlowSessionLanguage)
         query_input = dialogflow_v2.types.QueryInput(text = text_input)
         df_response = session_client.detect_intent(session_path, query_input)
-        print("df_response",df_response)        
+        print("df_response",df_response)    
+        print("output_contexts", df_response.query_result.output_contexts)    
         text =df_response.query_result.fulfillment_text
         if df_response.query_result.intent.display_name == "get_weather" and df_response.query_result.all_required_params_present:
             print(df_response.query_result.parameters)
             result = make_weather_api_call(str(df_response.query_result.parameters.fields['geo-city'].string_value))
             text += str(result)
-        elif df_response.query_result.intent.display_name == "get_translation_phrase":
+        elif df_response.query_result.output_contexts[0].name == "projects/sch2-ovrc/agent/sessions/sch2-ovrc/contexts/get_translation-followup":
             translator = Translator()
             result = translator.translate(df_response.query_result.query_text)
             text += str(result)
