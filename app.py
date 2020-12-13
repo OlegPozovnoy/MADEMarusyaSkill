@@ -50,8 +50,11 @@ def postJsonHandler():
         text = json.dumps(request.json)
     else: 
         text_input = dialogflow_v2.types.TextInput(text=request.json['request']['command'], language_code=dialogFlowSessionLanguage)
+        print("text_input",text_input)
         query_input = dialogflow_v2.types.QueryInput(text = text_input)
+        print("query_input",query_input)
         df_response = session_client.detect_intent(session_path, query_input)
+        print("df_response",df_response)        
         text =df_response.query_result.fulfillment_text
         if df_response.query_result.intent.display_name == "get_weather" and df_response.query_result.all_required_params_present:
             print(df_response.query_result.parameters)
@@ -111,6 +114,7 @@ def make_weather_api_call(city):
     print("api call", city)
     url = 'http://api.openweathermap.org/data/2.5/weather?q='+str(city)+',ru&APPID=' + str(weather_api)
     result = requests.get(url)
+    print(result)
     return result
 
 
