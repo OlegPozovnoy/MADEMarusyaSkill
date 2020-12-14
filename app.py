@@ -46,7 +46,7 @@ def postJsonHandler():
     text = ''
     uid = request.json["session"]['user_id']
     if request.json["session"]["new"]:
-        text = 'Привет, я ваш ассистент. Я могу рассказать про погоду ["какая погода в ..."], добавлять задания в список дел ["добавь в список дел"],\
+        text = 'Привет, я ваш ассистент. Я могу рассказать про погоду ["какая погода в ..."], показывать список дел ["покажи список дел"], добавлять задания в список дел ["добавь в список дел"],\
              удалять задания из списка["удали задание"], переводить предложения на английский["переведи фразу"]. Также вы можете пообщаться с прошлой версией Пивбота.["Вызови Пивбота"]'
     elif request.json["request"]["command"] == 'on_interrupt':
         text = 'До свидания.'
@@ -63,7 +63,7 @@ def postJsonHandler():
         if df_response.query_result.intent.display_name == "get_weather" and df_response.query_result.all_required_params_present:
             print(df_response.query_result.parameters)
             result = make_weather_api_call(str(df_response.query_result.parameters.fields['geo-city'].string_value))
-            text+= "\n" + translator.translate( result.get('weather', {}).get('description',''), lang_tgt = 'ru')
+            text+= "\n" + translator.translate( result.get('weather', [{}]])[0].get('description',''), lang_tgt = 'ru')
 
             temp_actual = (result.get('main',{}).get('temp') - 32) * 5 / 9
             temp_feel =  (result.get('main',{}).get('temp') - 32) * 5 / 9
