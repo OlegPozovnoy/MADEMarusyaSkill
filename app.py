@@ -58,14 +58,21 @@ def postJsonHandler():
         df_response = session_client.detect_intent(session_path, query_input)
         print("df_response",df_response)    
         #print("output_contexts", df_response.query_result.output_contexts[0])    
+        translator = google_translator()  
         text =df_response.query_result.fulfillment_text
         if df_response.query_result.intent.display_name == "get_weather" and df_response.query_result.all_required_params_present:
             print(df_response.query_result.parameters)
             result = make_weather_api_call(str(df_response.query_result.parameters.fields['geo-city'].string_value))
-            text += str(result)
+            text+= "\n" + translator.translate( result.get('weather', {}).get('description',''), lang_tgt = 'ru')
+
+            temp_actual = (result.get('main',{}).get('temp') - 32) * 5 / 9
+            temp_feel =  (result.get('main',{}).get('temp') - 32) * 5 / 9
+            humidity = result.get('humidity',{})
+            text += "\nтемпература" + str(temp_actual) + " цельсия"
+            text += "\nощущается как" + str(temp_feel) + " цельсия"
+            text += "\nвлажность" + str(humidity) + " процентов"
         elif df_response.query_result.intent.display_name == "get_translation - fallback":
             print("translatign", df_response.query_result.query_text)   
-            translator = google_translator()  
             translate_text = translator.translate(df_response.query_result.query_text,lang_tgt='en')  
             text += str(translate_text)
         elif df_response.query_result.intent.display_name == "get_my_tasks":
