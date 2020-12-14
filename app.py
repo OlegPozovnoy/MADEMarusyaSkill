@@ -88,7 +88,7 @@ def postJsonHandler():
                     delete_task(uid, task)
                     deleted_tasks.append(task_list)
             
-            if len(delete_task) == 0:
+            if len(deleted_tasks) == 0:
                 text = "Не могу найти в списке дел " + str(current_task)
             else:
                 text += " ".join(deleted_tasks)
