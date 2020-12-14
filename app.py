@@ -67,7 +67,7 @@ def postJsonHandler():
 
             temp_actual = result.get('main',{}).get('temp') - 273.15
             temp_feel =  result.get('main',{}).get('temp') - 273.15
-            humidity = result.get('humidity',{})
+            humidity = result.get('main',{}).get('humidity')
             text += "\nтемпература" + str(temp_actual) + " цельсия"
             text += "\nощущается как" + str(temp_feel) + " цельсия"
             text += "\nвлажность" + str(humidity) + " процентов"
