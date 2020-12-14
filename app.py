@@ -68,9 +68,9 @@ def postJsonHandler():
             temp_actual = result.get('main',{}).get('temp') - 273.15
             temp_feel =  result.get('main',{}).get('temp') - 273.15
             humidity = result.get('main',{}).get('humidity')
-            text += "\nтемпература" + str(temp_actual) + " цельсия"
-            text += "\nощущается как" + str(temp_feel) + " цельсия"
-            text += "\nвлажность" + str(humidity) + " процентов"
+            text += "\nтемпература " + str(int(temp_actual)) + " цельсия"
+            text += "\nощущается как " + str(int(temp_feel)) + " цельсия"
+            text += "\nвлажность " + str(int(humidity)) + " процентов"
         elif df_response.query_result.intent.display_name == "get_translation - fallback":
             print("translatign", df_response.query_result.query_text)   
             translate_text = translator.translate(df_response.query_result.query_text,lang_tgt='en')  
