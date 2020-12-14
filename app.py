@@ -84,7 +84,7 @@ def postJsonHandler():
             task_list = get_task(uid)
             deleted_tasks = []
             for task in task_list:
-                print(fuzz.ratio(task, current_task), task, curren_task)
+                print(fuzz.ratio(task, current_task), task, current_task)
                 if fuzz.ratio(task, current_task) > 0.85:
                     delete_task(uid, task)
                     deleted_tasks.append(task)
