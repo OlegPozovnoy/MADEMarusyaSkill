@@ -63,7 +63,7 @@ def postJsonHandler():
         if df_response.query_result.intent.display_name == "get_weather" and df_response.query_result.all_required_params_present:
             print(df_response.query_result.parameters)
             result = make_weather_api_call(str(df_response.query_result.parameters.fields['geo-city'].string_value))
-            text+= "\n" + translator.translate( result.get('weather', [{}]])[0].get('description',''), lang_tgt = 'ru')
+            text+= "\n" + translator.translate( result.get('weather', [{}])[0].get('description',''), lang_tgt = 'ru')
 
             temp_actual = (result.get('main',{}).get('temp') - 32) * 5 / 9
             temp_feel =  (result.get('main',{}).get('temp') - 32) * 5 / 9
