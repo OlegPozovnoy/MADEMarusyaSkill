@@ -47,7 +47,7 @@ def postJsonHandler():
     uid = request.json["session"]['user_id']
     if request.json["session"]["new"]:
         text = 'Привет, я ваш ассистент. Я могу рассказать про погоду ["какая погода в ..."], добавлять задания в список дел ["добавь в список дел"],\
-             переводить предложения на английский["переведи фразу"]. Также вы можете пообщаться с прошлой версией Пивбота.["Вызови Пивбота"]'
+             удалять задания из списка["удали задание"], переводить предложения на английский["переведи фразу"]. Также вы можете пообщаться с прошлой версией Пивбота.["Вызови Пивбота"]'
     elif request.json["request"]["command"] == 'on_interrupt':
         text = 'До свидания.'
     elif request.json['request']['command'] == 'debug':
@@ -74,7 +74,7 @@ def postJsonHandler():
             if len(tasks) == 0:
                 text += str("Пока у вас ничего не запланировано")
             else:
-                text += str(tasks)  
+                text += "\n".join(tasks)  
         elif df_response.query_result.intent.display_name == "create_task - fallback":
             print("create_task - fallback", uid, df_response.query_result.query_text)
             insert_task(uid, df_response.query_result.query_text)            
@@ -156,9 +156,7 @@ def get_task(uid):
     my_list = []
 
     for row in result:
-        my_list.append({
-            "task": str(row[0])
-            })
+        my_list.append( str(row[0]))
 
     return my_list   
 
