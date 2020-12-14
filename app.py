@@ -86,12 +86,12 @@ def postJsonHandler():
             for task in task_list:
                 if fuzz.ratio(task, current_task) > 0.85:
                     delete_task(uid, task)
-                    deleted_tasks.append(task_list)
+                    deleted_tasks.append(task)
             
             if len(deleted_tasks) == 0:
                 text = "Не могу найти в списке дел " + str(current_task)
             else:
-                text += " ".join(deleted_tasks)
+                text += "\n".join(deleted_tasks)
 
             insert_task(uid, df_response.query_result.query_text)   
 
