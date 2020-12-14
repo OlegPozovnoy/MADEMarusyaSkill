@@ -93,8 +93,7 @@ def postJsonHandler():
                 text = "Не могу найти в списке дел " + str(current_task)
             else:
                 text += "\n".join(deleted_tasks)
-
-            insert_task(uid, df_response.query_result.query_text)   
+  
 
     response = {
         "version": request.json['version'],
