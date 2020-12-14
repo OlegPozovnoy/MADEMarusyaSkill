@@ -13,6 +13,7 @@ import os
 import psycopg2
 import requests
 from time import sleep
+from fuzzywuzzy import fuzz
 
 app = Flask(__name__)
 
@@ -77,7 +78,22 @@ def postJsonHandler():
         elif df_response.query_result.intent.display_name == "create_task - fallback":
             print("create_task - fallback", uid, df_response.query_result.query_text)
             insert_task(uid, df_response.query_result.query_text)            
-        
+        elif df_response.query_result.intent.display_name == "delete_task - fallback":
+            print("delete_task - fallback", uid, df_response.query_result.query_text)
+            current_task = df_response.query_result.query_text
+            task_list = get_task(uid)
+            deleted_tasks = []
+            for task in task_list:
+                if fuzz.ratio(task, current_task) > 0.85:
+                    delete_task(uid, task)
+                    deleted_tasks.append(task_list)
+            
+            if len(delete_task) == 0:
+                text = "Не могу найти в списке дел " + str(current_task)
+            else:
+                text += " ".join(deleted_tasks)
+
+            insert_task(uid, df_response.query_result.query_text)   
 
     response = {
         "version": request.json['version'],
@@ -96,7 +112,7 @@ def postJsonHandler():
 
 query_insert = "insert into marusya (uid, task_name) values ('%uid%', '%task_name%')"
 query_select = "select task_name from marusya where uid = '%uid%'"
-
+query_delete = "delete from marusya where uid = '%uid%' and task_name='%task_name%'"
 
 def make_weather_api_call(city):
     print("api call", city)
@@ -146,6 +162,23 @@ def get_task(uid):
 
     return my_list   
 
+
+def delete_task(uid, task_text):
+    conn = psycopg2.connect( 
+        user=user, 
+        password=password,
+        host=host, 
+        dbname=db)
+    conn.autocommit = True
+
+    print("delete_task", uid, task_text)
+    query = query_delete.replace('%uid%', uid)
+    query = query.replace('%task_name%', task_text)
+    print("query", query)
+    cursor = conn.cursor()
+    cursor.execute(query)
+    #sleep(0.05)
+    return 
 
 if __name__ == '__main__':
     app.run(debug=True)
